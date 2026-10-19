@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: mtg-db
+    restart: unless-stopped
+    command: --sql_mode=
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: servatrice
+      MARIADB_USER: servatrice
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db-init/servatrice.sql:/docker-entrypoint-initdb.d/servatrice.sql:ro
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  servatrice:
+    image: ghcr.io/cockatrice/servatrice:latest
+    container_name: mtg-servatrice
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+    entrypoint: ["servatrice", "--config", "/etc/servatrice/servatrice.ini", "--log-to-console"]
+    ports:
+      - "4747:4747"   # cliente de escritorio Cockatrice
+      - "4748:4748"   # WebSocket (Webatrice)
+    volumes:
+      - ./servatrice/servatrice.ini:/etc/servatrice/servatrice.ini:ro
+      - server-logs:/home/servatrice
+
+volumes:
+  db-data:
+  server-logs:
