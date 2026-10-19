@@ -1,0 +1,55 @@
+[server]
+name="MTG dob-world"
+id=1
+host=any
+port=4747
+number_pools=1
+websocket_number_pools=1
+websocket_host=any
+websocket_port=4748
+statusupdate=15000
+writelog=0
+clientkeepalive=1
+max_player_inactivity_time=15
+idleclienttimeout=3600
+
+[authentication]
+# sql: usuarios registrados en MariaDB
+method=sql
+regonly=false
+
+[users]
+minnamelength=3
+maxnamelength=16
+allowlowercase=true
+allowuppercase=true
+allownumerics=true
+allowedpunctuation=_.-
+minpasswordlength=8
+
+[registration]
+enabled=true
+requireemailactivation=false
+requireemailfield=false
+
+[database]
+type=mysql
+prefix=cockatrice
+hostname=db
+database=servatrice
+user=servatrice
+# Debe coincidir con DB_PASSWORD de .env
+password=CHANGE_ME
+
+[rooms]
+method=config
+roomlist\size=1
+roomlist\1\name="General"
+roomlist\1\description="Partidas de Magic"
+roomlist\1\autojoin=true
+roomlist\1\joinmessage="Bienvenido a mtg.dob-world.com"
+roomlist\1\chathistorysize=100
+roomlist\1\game_types\size=3
+roomlist\1\game_types\1\name="Commander"
+roomlist\1\game_types\2\name="Modern"
+roomlist\1\game_types\3\name="Casual"
