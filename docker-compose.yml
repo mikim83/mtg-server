@@ -25,6 +25,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
     entrypoint: ["servatrice", "--config", "/etc/servatrice/servatrice.ini", "--log-to-console"]
     ports:
       - "4747:4747"   # cliente de escritorio Cockatrice
